@@ -53,7 +53,7 @@ public class PageEventHandler {
                                 Duration.ofSeconds(5),
                                 Duration.ZERO
                         ))
-                        .count()
+                        .count(Materialized.as("count-store"))
                         .toStream()
                         .map((k,v)->new KeyValue<>(k.key(), v))
                 ;
