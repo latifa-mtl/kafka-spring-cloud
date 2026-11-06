@@ -1,9 +1,12 @@
 package moutawakil.latifa.kafkaspringcloud.handlers;
 
 import moutawakil.latifa.kafkaspringcloud.events.PageEvent;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.TimeWindows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -41,8 +44,19 @@ public class PageEventHandler {
 
     @Bean
     public Function<KStream<String, PageEvent>, KStream<String, Long>> kStreamFunction(){
-        return (input)->
-                input.filter((k,v)->v.duration()>100)
-                        .map((k,v)->new KeyValue<>(v.name(), v.duration()));
+        return (stream)->
+                stream
+                        .filter((k,v)->v.duration()>100)
+                        .map((k,v)->new KeyValue<>(v.name(), 0L))
+                        .groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
+                        .windowedBy(TimeWindows.ofSizeAndGrace(
+                                Duration.ofSeconds(5),
+                                Duration.ZERO
+                        ))
+                        .count()
+                        .toStream()
+                        .map((k,v)->new KeyValue<>(k.key(), v))
+                ;
+
     }
 }
