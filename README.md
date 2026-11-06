@@ -167,7 +167,7 @@ http://localhost:9090/publish?name=P1&topic=T2
 
 L'événement est publié dans le topic demandé et retourné au format JSON.
 
-![Publication depuis le navigateur](assets/page-web.png)
+![Publication depuis le navigateur](assets/page-analytics.png)
 
 ### Consultation des analyses
 
@@ -185,7 +185,7 @@ http://localhost:9090/index.html
 
 La page affiche deux courbes : une pour la page P1 et une pour la page P2. Les premiers résultats apparaissent après un délai initial d'environ 30 secondes, correspondant à l'intervalle de commit par défaut de Kafka Streams.
 
-![Visualisation temps réel](assets/page-analytics.png)
+![Visualisation temps réel](assets/page-web.png)
 
 ### Lecture du résultat dans le topic T4
 
